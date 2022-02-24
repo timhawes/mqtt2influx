@@ -36,7 +36,10 @@ class InfluxWriterThread(threading.Thread):
                 data.append(m)
             except queue.Empty:
                 pass
-            if len(data) > MAX_SEND_METRICS or time.time() - last_send > MAX_SEND_INTERVAL:
+            if (
+                len(data) > MAX_SEND_METRICS
+                or time.time() - last_send > MAX_SEND_INTERVAL
+            ):
                 data_string = "\n".join(data)
                 for url in INFLUX_URLS:
                     try:
