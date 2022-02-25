@@ -43,12 +43,16 @@ class InfluxWriterThread(threading.Thread):
                 data_string = "\n".join(data)
                 for url in INFLUX_URLS:
                     try:
-                        r = requests.post(url, data=data_string)
+                        r = requests.post(
+                            url,
+                            data=data_string,
+                            headers={"Content-Type": "application/octet-stream"},
+                        )
                         r.raise_for_status()
                     except Exception as e:
                         logging.exception(
-                            "Exception while sending to {} to {}".format(
-                                data_string, url
+                            "Exception while sending {} to {}, response {}".format(
+                                data_string, url, r.content
                             )
                         )
                 last_send = time.time()
