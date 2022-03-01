@@ -48,12 +48,15 @@ class InfluxWriterThread(threading.Thread):
                             data=data_string,
                             headers={"Content-Type": "application/octet-stream"},
                         )
-                        r.raise_for_status()
+                        if not r.ok:
+                            logging.error(
+                                "Error while sending {} to {}, response {}".format(
+                                    data_string, url, r.content
+                                )
+                            )
                     except Exception as e:
                         logging.exception(
-                            "Exception while sending {} to {}, response {}".format(
-                                data_string, url, r.content
-                            )
+                            "Exception while sending {} to {}".format(data_string, url)
                         )
                 last_send = time.time()
                 data = []
