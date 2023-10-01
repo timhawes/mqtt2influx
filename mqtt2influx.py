@@ -95,7 +95,7 @@ def on_message(client, userdata, msg):
 
     topic = msg.topic
     if topic.startswith("$SYS/"):
-        topic.replace("$SYS/", "_SYS/")
+        topic = topic.replace("$SYS/", "_SYS/")
     topic = msg.topic.replace("/", ".").replace(" ", "\\ ")
 
     packet = "{}{} value={} {}".format(
