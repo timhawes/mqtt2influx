@@ -93,9 +93,10 @@ def on_message(client, userdata, msg):
             logging.debug("parse error> {}".format(data))
             return
 
-    topic = msg.topic.replace("/", ".").replace(" ", "\\ ")
+    topic = msg.topic
     if topic.startswith("$SYS/"):
         topic.replace("$SYS/", "_SYS/")
+    topic = msg.topic.replace("/", ".").replace(" ", "\\ ")
 
     packet = "{}{} value={} {}".format(
         INFLUX_MEASUREMENT_PREFIX,
