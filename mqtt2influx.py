@@ -64,6 +64,7 @@ class InfluxWriterThread(threading.Thread):
 
 def on_connect(client, userdata, flags, rc):
     client.subscribe("#")
+    client.subscribe("$SYS/#")
 
 
 def on_message(client, userdata, msg):
@@ -92,9 +93,13 @@ def on_message(client, userdata, msg):
             logging.debug("parse error> {}".format(data))
             return
 
+    topic = msg.topic.replace("/", ".").replace(" ", "\\ ")
+    if topic.startswith("$SYS/"):
+        topic.replace("$SYS/", "_SYS/")
+
     packet = "{}{} value={} {}".format(
         INFLUX_MEASUREMENT_PREFIX,
-        msg.topic.replace("/", ".").replace(" ", "\\ "),
+        topic,
         v,
         int(time.time() * 1_000_000_000),
     )
